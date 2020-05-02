@@ -84,6 +84,7 @@ def Check04_TmaxTminRange( DataDF, ReplacedValuesDF ):
     
     ## Count the instances when the difference is greater than 25
     count_range=len(DataDF.loc[(DataDF['Max Temp']-DataDF['Min Temp']>25)])
+    ## Replace it with NaN
     DataDF.loc[(DataDF['Max Temp']-DataDF['Min Temp']>25),['Min Temp','Max Temp']]=np.nan
     ReplacedValuesDF.loc['4. Range Fail',:]=[0,count_range,count_range,0]   
 
@@ -100,12 +101,17 @@ if __name__ == '__main__':
     DataDF, ReplacedValuesDF = ReadData(fileName)
     DataDF_original=DataDF
     
+    ## Capture the original values to plot before correction and use later using figure numbering
+    ## Precipitation Plot
     plt.figure(1)
     plt.plot(DataDF_original.index,DataDF_original['Precip'],label='Before Correction',color='red')
+    ## Max Temp Plot
     plt.figure(2)
     plt.plot(DataDF_original.index,DataDF_original['Max Temp'],label='Before Correction',color='red')
+    ## Min Temp Plot
     plt.figure(3)
     plt.plot(DataDF_original.index,DataDF_original['Min Temp'],label='Before Correction',color='red')
+    ## Wind Speed Plot
     plt.figure(4)
     plt.plot(DataDF_original.index,DataDF_original['Wind Speed'],label='Before Correction',color='red')
     
@@ -158,7 +164,6 @@ if __name__ == '__main__':
     plt.plot(DataDF.index,DataDF['Min Temp'],label='After Correction',color='green')
     plt.xlabel('Date')
     plt.xticks(rotation=50)
-    #plt.ylabel(r'Temperature ('$^0 C$')')
     plt.ylabel(r'$Temperature\ (^0 C)$')
     plt.title('Plot of Minimum Temperature\n(Before and After Correction)')
     plt.legend()
@@ -181,5 +186,5 @@ if __name__ == '__main__':
     
     ## Output Data and Information
     DataDF.to_csv('data_qualitychecked.csv',sep=' ') ## Same format as input
-    ReplacedValuesDF.to_csv('failed_check_info.csv',sep='\t') ## Delimiter is tab
+    ReplacedValuesDF.to_csv('data_failed_check_info.csv',sep='\t') ## Delimiter is tab
     
